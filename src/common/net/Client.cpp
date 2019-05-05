@@ -344,6 +344,14 @@ bool xmrig::Client::parseJob(const rapidjson::Value &params, int *code)
         return false;
     }
 
+	if (params.HasMember("wid")) {
+		const rapidjson::Value &wid = params["wid"];
+
+        if (wid.IsInt()) {
+            job.setWid(wid.GetInt());
+        }
+    }
+
     if (params.HasMember("algo")) {
         job.setAlgorithm(params["algo"].GetString());
     }

@@ -215,12 +215,14 @@ void OclWorker::consumeJob()
     m_job = std::move(job);
     m_job.setThreadId(m_id);
 
-    if (m_job.isNicehash()) {
+    if (m_job.isNicehash()) { // so something here?
         m_ctx->Nonce = (*m_job.nonce() & 0xff000000U) + (0xffffffU / m_threads * m_id);
     }
     else {
         m_ctx->Nonce = 0xffffffffU / m_threads * m_id;
     }
+
+	m_ctx->Nonce = (m_ctx->Nonce & 0x0fffffff) | (m_job.wid() << 28);
 
     setJob();
 }

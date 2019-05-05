@@ -54,6 +54,7 @@ public:
     bool setTarget(const char *target);
     void setAlgorithm(const char *algo);
     void setHeight(uint64_t height);
+    void setWid(int wid);
 
     inline bool isNicehash() const                    { return m_nicehash; }
     inline bool isValid() const                       { return m_size > 0 && m_diff > 0; }
@@ -70,6 +71,7 @@ public:
     inline uint32_t diff() const                      { return static_cast<uint32_t>(m_diff); }
     inline uint64_t target() const                    { return m_target; }
     inline uint64_t height() const                    { return m_height; }
+    inline int wid() const                    		  { return m_wid; }
     inline void reset()                               { m_size = 0; m_diff = 0; }
     inline void setClientId(const Id &id)             { m_clientId = id; }
     inline void setPoolId(int poolId)                 { m_poolId = poolId; }

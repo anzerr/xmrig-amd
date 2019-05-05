@@ -66,6 +66,7 @@ xmrig::Job::Job() :
     m_size(0),
     m_diff(0),
     m_target(0),
+    m_wid(0),
     m_blob(),
     m_height(0)
 {
@@ -80,6 +81,7 @@ xmrig::Job::Job(int poolId, bool nicehash, const Algorithm &algorithm, const Id 
     m_size(0),
     m_diff(0),
     m_target(0),
+    m_wid(0),
     m_blob(),
     m_height(0),
     m_algorithm(algorithm),
