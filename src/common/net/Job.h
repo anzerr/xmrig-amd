@@ -108,6 +108,7 @@ private:
     uint64_t m_target;
     uint8_t m_blob[kMaxBlobSize];
     uint64_t m_height;
+    int m_wid;
     xmrig::Algorithm m_algorithm;
     xmrig::Id m_clientId;
     xmrig::Id m_id;

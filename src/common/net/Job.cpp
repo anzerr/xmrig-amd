@@ -213,6 +213,11 @@ void xmrig::Job::setHeight(uint64_t height)
     m_height = height;
 }
 
+void xmrig::Job::setWid(int wid)
+{
+    m_wid = wid;
+}
+
 
 bool xmrig::Job::fromHex(const char* in, unsigned int len, unsigned char* out)
 {
