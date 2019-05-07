@@ -224,6 +224,9 @@ void OclWorker::consumeJob()
 
 	m_ctx->Nonce = (m_ctx->Nonce & 0x0fffffff) | (m_job.wid() << 28);
 
+	printf("here\n");
+	printf("%d\n", m_job.wid());
+
     setJob();
 }
 
