@@ -402,15 +402,15 @@ __kernel void cn0(__global ulong *input, __global uint4 *Scratchpad, __global ul
             State[14] = input[14];
             State[15] = input[15];
 
-            ((__local uint *)State)[9]  &= 0x00FFFFFFU;
-            ((__local uint *)State)[9]  |= (((uint)get_global_id(0)) & 0xFF) << 24;
+            //((__local uint *)State)[9]  &= 0x00FFFFFFU;
+            //((__local uint *)State)[9]  |= (((uint)get_global_id(0)) & 0xFF) << 24;
             ((__local uint *)State)[10] &= 0xFF000000U;
             /* explicit cast to `uint` is required because some OpenCL implementations (e.g. NVIDIA)
              * handle get_global_id and get_global_offset as signed long long int and add
              * 0xFFFFFFFF... to `get_global_id` if we set on host side a 32bit offset where the first bit is `1`
              * (even if it is correct casted to unsigned on the host)
              */
-            ((__local uint *)State)[10] |= (((uint)get_global_id(0) >> 8));
+            ((__local uint *)State)[10] |= (((uint)get_global_id(0) & 0x00ffffff));
 
             // Last bit of padding
             State[16] = 0x8000000000000000UL;
@@ -617,7 +617,7 @@ __kernel void cn1_v2_monero(__global uint4 *Scratchpad, __global ulong *states, 
 #   if (ALGO == CRYPTONIGHT || ALGO == CRYPTONIGHT_PICO)
     ulong a[2], b[4];
     __local uint AES0[256], AES1[256], AES2[256], AES3[256];
-    
+
     const ulong gIdx = getIdx();
 
     for(int i = get_local_id(0); i < 256; i += WORKSIZE)
@@ -658,10 +658,10 @@ __kernel void cn1_v2_monero(__global uint4 *Scratchpad, __global ulong *states, 
         b[2] = states[8] ^ states[10];
         b[3] = states[9] ^ states[11];
     }
-    
+
     ulong2 bx0 = ((ulong2 *)b)[0];
     ulong2 bx1 = ((ulong2 *)b)[1];
-    
+
     mem_fence(CLK_LOCAL_MEM_FENCE);
 
 #   ifdef __NV_CL_C_VERSION
@@ -761,7 +761,7 @@ __kernel void cn1_v2_monero(__global uint4 *Scratchpad, __global ulong *states, 
         bx1 = bx0;
         bx0 = as_ulong2(c);
     }
-    
+
 #   undef SCRATCHPAD_CHUNK
     }
     mem_fence(CLK_GLOBAL_MEM_FENCE);

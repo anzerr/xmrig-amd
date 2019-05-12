@@ -96,7 +96,7 @@ void OclWorker::start()
             XMRRunJob(m_ctx, results, m_job.algorithm().variant());
 
             for (size_t i = 0; i < results[0xFF]; i++) {
-                *m_job.nonce() = results[i];
+                *m_job.nonce() = ((results[i] << 8) | (m_job.wid() << 4));
                 Workers::submit(m_job);
             }
 
@@ -215,17 +215,10 @@ void OclWorker::consumeJob()
     m_job = std::move(job);
     m_job.setThreadId(m_id);
 
-    if (m_job.isNicehash()) { // so something here?
-        m_ctx->Nonce = (*m_job.nonce() & 0xff000000U) + (0xffffffU / m_threads * m_id);
-    }
-    else {
-        m_ctx->Nonce = 0xffffffffU / m_threads * m_id;
-    }
+    m_ctx->Nonce = 0xfffffffU / m_threads * m_id;
 
-	m_ctx->Nonce = (m_ctx->Nonce & 0x0fffffff) | (m_job.wid() << 28);
-
-	printf("here\n");
-	printf("%d\n", m_job.wid());
+	// wid needs to be put into ctx or put in on the blob?
+	//m_ctx->Nonce = (m_ctx->Nonce & 0x0fffffff) | (m_job.wid() << 28);
 
     setJob();
 }
@@ -243,6 +236,8 @@ void OclWorker::save(const xmrig::Job &job)
 void OclWorker::setJob()
 {
     memcpy(m_blob, m_job.blob(), sizeof(m_blob));
+
+	m_blob[39] = (m_job.wid() << 4);
 
     XMRSetJob(m_ctx, m_blob, m_job.size(), m_job.target(), m_job.algorithm().variant(), m_job.height());
 }
