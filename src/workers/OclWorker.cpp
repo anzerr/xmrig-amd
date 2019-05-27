@@ -28,6 +28,9 @@
 #include <mutex>
 #include <thread>
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 #include "amd/OclGPU.h"
 #include "common/log/Log.h"
@@ -212,10 +215,12 @@ void OclWorker::consumeJob()
         return;
     }
 
+	srand(time(NULL) + m_id);
+
     m_job = std::move(job);
     m_job.setThreadId(m_id);
 
-    m_ctx->Nonce = 0xfffffffU / m_threads * m_id;
+    m_ctx->Nonce = rand() % 0xfffffffU;
 
 	// wid needs to be put into ctx or put in on the blob?
 	//m_ctx->Nonce = (m_ctx->Nonce & 0x0fffffff) | (m_job.wid() << 28);

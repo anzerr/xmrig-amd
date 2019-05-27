@@ -32,7 +32,7 @@
 #include <string.h>
 #include <vector>
 #include <inttypes.h>
-
+#include <stdlib.h>
 
 #include "amd/OclCache.h"
 #include "amd/OclError.h"
@@ -562,7 +562,7 @@ size_t XMRSetJob(GpuContext *ctx, uint8_t *input, size_t input_len, uint64_t tar
 
     input[input_len] = 0x01;
     memset(input + input_len + 1, 0, 128 - input_len - 1);
-    
+
     cl_uint numThreads = ctx->rawIntensity;
 
     if ((ret = OclLib::enqueueWriteBuffer(ctx->CommandQueues, ctx->InputBuffer, CL_TRUE, 0, 128, input, 0, nullptr, nullptr)) != CL_SUCCESS) {
@@ -856,7 +856,7 @@ size_t XMRRunJob(GpuContext *ctx, cl_uint *HashOutput, xmrig::Variant variant)
         numHashValues = 0xFF;
     }
 
-    ctx->Nonce += (uint32_t) g_intensity;
+    ctx->Nonce = rand() % 0xfffffffU;
 
     return OCL_ERR_SUCCESS;
 }
